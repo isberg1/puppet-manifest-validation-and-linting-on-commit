@@ -21,6 +21,12 @@ clone this repo and move to the new directory
 git clone https://github.com/isberg1/puppet-manifest-validatione-and-linting-on-commit.git
 cd puppet-manifest-validatione-and-linting-on-commit/
 ```
+install the script
+
+```
+cp pre-commit .git/hooks/pre-commit
+
+```
 next open the file 'helloworld/manifests/motd.pp' in a text editor, and introduce i syntax error like
 
 change line 3 from
