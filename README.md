@@ -18,8 +18,8 @@ if you install them using other methods, make sure puppet and puppet-lint is in 
 clone this repo and move to the new directory
 
 ```
-git clone https://github.com/isberg1/puppet-manifest-validatione-and-linting-on-commit.git
-cd puppet-manifest-validatione-and-linting-on-commit/
+git clone https://github.com/isberg1/puppet-manifest-validation-and-linting-on-commit.git
+cd puppet-manifest-validation-and-linting-on-commit/
 ```
 install the script
 
