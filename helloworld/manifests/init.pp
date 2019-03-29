@@ -1,4 +1,5 @@
-class helloworld::motd {
+# test class
+class helloworld {
   file { '/home/isberg/helloWord.txt':
   owner   => 'isberg',
   group   => 'isberg',
