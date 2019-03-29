@@ -2,16 +2,16 @@
 
 git diff --cached --name-only | while read FILE; do
 if [[ "$FILE" =~ ^.+(pp)$ ]]; then
-    # Courtesy of swytsh from the comments below.
     if [[ -f $FILE ]]; then
-        puppet parser validate "$FILE" 1> /dev/null
+        puppet parser validate "$FILE"
         if [ $? -ne 0 ]; then
             echo -e "\e[1;31m\tAborting commit due to files with syntax errors.\e[0m" >&2
             exit 1
         fi
-        puppet-lint "$FILE" 1> /dev/null
+        errorText=$(puppet-lint "$FILE")
         if [ $? -ne 0 ]; then
             echo -e "\e[1;31m\tAborting commit due to files with linting errors.\e[0m" >&2
+            echo -e "\e[1;31m\t$errorText\e[0m" >&2
             exit 1
         fi   
     fi
