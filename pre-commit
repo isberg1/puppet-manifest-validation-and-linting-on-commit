@@ -1,20 +1,39 @@
 #!/bin/bash
 
-git diff --cached --name-only | while read FILE; do
-if [[ "$FILE" =~ ^.+(pp)$ ]]; then
-    if [[ -f $FILE ]]; then
-        puppet parser validate "$FILE"
-        if [ $? -ne 0 ]; then
-            echo -e "\e[1;31m\tAborting commit due to files with syntax errors.\e[0m" >&2
-            exit 1
-        fi
-        errorText=$(puppet-lint "$FILE")
-        if [ $? -ne 0 ]; then
-            echo -e "\e[1;31m\tAborting commit due to files with linting errors.\e[0m" >&2
-            echo -e "\e[1;31m\t$errorText\e[0m" >&2
-            exit 1
-        fi   
-    fi
-fi
-done || exit $?
+###   Functions  ###
 
+# prints red text
+function errorPrint() {
+    echo -e "\e[1;31m\t $1 \e[0m" >&2 
+}
+
+### Script Start ###
+
+# for all files changed since last commit
+git diff --cached --name-only | while read FILE
+do
+    # find all files ending in .pp
+    if [[ "$FILE" =~ ^.+(pp)$ ]]
+    then
+        # if the file still exits
+        if [[ -f $FILE ]]
+        then
+            # run syntax validarion on the file and check errors
+            if ! puppet parser validate "$FILE"
+            then
+                # if there are syntax errors, print error message and exit with errorconde 1
+                errorPrint "Aborting commit due to files with syntax errors."
+                exit 1
+            fi
+            # run linting check on file and check for errors
+            if ! errorText=$(puppet-lint "$FILE")
+            then
+                # if there are lining errors, print error message and exit with errorconde 1
+                errorPrint "$errorText"
+                errorPrint "Aborting commit due to files with linting errors."
+                exit 1
+            fi
+        fi
+    fi
+    # if $? is not 0, the commit will be aborted
+done || exit $?
